@@ -2,10 +2,14 @@ greedy_knapsack <- function(x, W) {
   # Validates the inputs
   stopifnot(
     "`W` must be a positive number!" = is.numeric(W) && length(W) == 1 && W > 0,
-    "`x` must be a data.frame with columns `v` and `w`!" =
-      is.data.frame(x) && all(c("v", "w") %in% names(x)),
-    "`x` columns `v` and `w` must contain positive numbers only!" =
-      is.numeric(x$v) && all(x$v > 0) && is.numeric(x$w) && all(x$w > 0)
+    "`x` must be a data.frame with columns `v` and `w`!" = is.data.frame(x) &&
+      all(c("v", "w") %in% names(x)),
+    "`x` columns `v` and `w` must contain positive numbers only!" = is.numeric(
+      x$v
+    ) &&
+      all(x$v > 0) &&
+      is.numeric(x$w) &&
+      all(x$w > 0)
   )
 
   # Calculates value density column
@@ -27,7 +31,9 @@ greedy_knapsack <- function(x, W) {
     # Iterates over each row in x to add the next most densely valuable element
     repeat {
       # Breaks if adding the next element exceeds W
-      if (i > nrow(x) || w_cum + x_sorted[i, "w"] > W) break
+      if (i > nrow(x) || w_cum + x_sorted[i, "w"] > W) {
+        break
+      }
 
       # Sets the new cummulative values with the current element
       w_cum <- w_cum + x_sorted[i, "w"]
