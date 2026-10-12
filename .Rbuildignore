@@ -1,0 +1,8 @@
+^renv$
+^renv\.lock$
+^LICENSE\.md$
+^\.Rprofile$
+^\.vscode$
+^aprlab06\.Rproj$
+^\.Rproj\.user$
+^\.github$

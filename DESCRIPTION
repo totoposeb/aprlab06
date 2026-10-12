@@ -1,0 +1,14 @@
+Package: aprlab06
+Title: Advanced R Programming Lab 06
+Version: 0.0.0.9000
+Authors@R: 
+    c(
+    person("Sebastián","Soriano Pérez",,"sebso409@student.liu.se", role = c("aut", "cre")),
+    person("Yuanyu","Xia",,"yuaxi059@student.liu.se", role = "aut")
+  )
+Description: Package for solving the knapsack problem by brute force search,
+    dynamic programming and a greedy heuristic.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+Config/roxygen2/version: 8.1.1

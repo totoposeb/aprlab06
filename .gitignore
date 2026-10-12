@@ -1,4 +1,3 @@
-$ cat > .gitignore <<'EOF'
 # R
 .Rhistory
 .Rapp.history
@@ -18,4 +17,4 @@ renv/python/
 # Sistema
 .DS_Store
 .vscode/
-EOF
+.Rproj.user
