@@ -26,20 +26,17 @@ greedy_knapsack <- function(x, W) {
   # Initializes iterator i to 1
   i <- 1
 
-  # Enters the while loop only if the first element does not exceed W
-  if (x_sorted[i, "w"] <= W) {
-    # Iterates over each row in x to add the next most densely valuable element
-    repeat {
-      # Breaks if adding the next element exceeds W
-      if (i > nrow(x) || w_cum + x_sorted[i, "w"] > W) {
-        break
-      }
-
-      # Sets the new cummulative values with the current element
-      w_cum <- w_cum + x_sorted[i, "w"]
-      v_cum <- v_cum + x_sorted[i, "v"]
-      i <- i + 1
+  # Iterates over each row in x to add the next most densely valuable element
+  repeat {
+    # Breaks if adding the next element exceeds W
+    if (i > nrow(x) || w_cum + x_sorted[i, "w"] > W) {
+      break
     }
+
+    # Sets the new cummulative values with the current element
+    w_cum <- w_cum + x_sorted[i, "w"]
+    v_cum <- v_cum + x_sorted[i, "v"]
+    i <- i + 1
   }
 
   # Returns a list with the best value and elements found

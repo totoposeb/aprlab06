@@ -16,7 +16,7 @@ brute_force_knapsack <- function(x, W) {
   # Gets the number of items
   n <- nrow(x)
   v_max <- 0
-  best_rows <- c()
+  best_rows <- integer(0)
 
   # Iterates from 1 to 2^n, which is the total number of different combinations
   for (i in seq_len(2^n - 1)) {
