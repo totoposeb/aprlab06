@@ -2,10 +2,14 @@ brute_force_knapsack <- function(x, W) {
   # Validates the inputs
   stopifnot(
     "`W` must be a positive number!" = is.numeric(W) && length(W) == 1 && W > 0,
-    "`x` must be a data.frame with columns `v` and `w`!" =
-      is.data.frame(x) && all(c("v", "w") %in% names(x)),
-    "`x` columns `v` and `w` must contain positive numbers only!" =
-      is.numeric(x$v) && all(x$v > 0) && is.numeric(x$w) && all(x$w > 0),
+    "`x` must be a data.frame with columns `v` and `w`!" = is.data.frame(x) &&
+      all(c("v", "w") %in% names(x)),
+    "`x` columns `v` and `w` must contain positive numbers only!" = is.numeric(
+      x$v
+    ) &&
+      all(x$v > 0) &&
+      is.numeric(x$w) &&
+      all(x$w > 0),
     "`x` cannot exceed 31 rows!" = nrow(x) <= 31
   )
 
@@ -33,6 +37,7 @@ brute_force_knapsack <- function(x, W) {
     }
   }
 
+  # Returns a list with the best value and elements found
   list(
     value = v_max,
     elements = best_rows
