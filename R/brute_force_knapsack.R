@@ -1,4 +1,4 @@
-brute_force_knapsack <- function(x, W) {
+brute_force_knapsack <- function(x, W, parallel = FALSE) {
   # Validates the inputs
   stopifnot(
     "`W` must be a positive number!" = is.numeric(W) && length(W) == 1 && W > 0,
@@ -18,6 +18,36 @@ brute_force_knapsack <- function(x, W) {
   v_max <- 0
   best_rows <- integer(0)
 
+  # Copies columns into vector to Optimize after profvis call
+  w <- x[, "w"]
+  v <- x[, "v"]
+
+  search_piece <- function(piece, w, v, W) {
+    v_max <- 0
+    best_rows <- integer(0)
+
+    for (i in piece[1]:piece[2]) {
+      # Expresses the current combination in binary
+      bin_subset <- intToBits(i)
+
+      # Selects the items for the current combination
+      selected_rows <- which(bin_subset == 1)
+
+      # Checks if the current combination is within the W limits
+      if (sum(w[selected_rows]) <= W) {
+        # Calculates the total value of the current combination
+        v_sum <- sum(v[selected_rows])
+
+        # If the max value is larger than the current one, it trumps it
+        best_rows <- if (v_sum > v_max) selected_rows else best_rows
+        v_max <- if (v_sum > v_max) v_sum else v_max
+      }
+    }
+
+    list(value = v_max, elements = best_rows)
+  }
+
+
   # Iterates from 1 to 2^n, which is the total number of different combinations
   for (i in seq_len(2^n - 1)) {
     # Expresses the current combination in binary
@@ -27,9 +57,9 @@ brute_force_knapsack <- function(x, W) {
     selected_rows <- which(bin_subset == 1)
 
     # Checks if the current combination is within the W limits
-    if (sum(x[selected_rows, "w"]) <= W) {
+    if (sum(w[selected_rows]) <= W) {
       # Calculates the total value of the current combination
-      v_sum <- sum(x[selected_rows, "v"])
+      v_sum <- sum(v[selected_rows])
 
       # If the max value is larger than the current one, it trumps it
       best_rows <- if (v_sum > v_max) selected_rows else best_rows
