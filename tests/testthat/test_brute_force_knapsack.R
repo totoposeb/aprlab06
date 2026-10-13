@@ -37,3 +37,10 @@ test_that("Function return correct results.", {
   st <- system.time(bfk <- brute_force_knapsack(x = knapsack_objects[1:16,], W = 2000))
   expect_true(as.numeric(st)[2] >= 0.00)
 })
+
+test_that("Functions return same results with and without parallelizing.", {
+  expect_equal(
+    brute_force_knapsack(x = knapsack_objects[1:15,], W = 3500, parallel = TRUE),
+    brute_force_knapsack(x = knapsack_objects[1:15,], W = 3500)
+  )
+})

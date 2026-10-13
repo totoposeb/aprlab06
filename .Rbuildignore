@@ -6,3 +6,5 @@
 ^aprlab06\.Rproj$
 ^\.Rproj\.user$
 ^\.github$
+^profvis$
+^index_files$
