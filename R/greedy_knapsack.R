@@ -1,3 +1,29 @@
+#' Greedy Knapsack Solver
+#'
+#' Solves the 0/1 knapsack problem using a greedy heuristic. Items are ranked
+#' by value density (\code{v / w}) in descending order, and added one by one
+#' until the next item would exceed the capacity \code{W}. This heuristic does
+#' not guarantee an optimal solution.
+#'
+#' @param x A \code{data.frame} with columns \code{v} (values) and \code{w}
+#'   (weights), both numeric and positive.
+#'
+#' @param W A single positive number giving the maximum weight capacity.
+#'
+#' @return A list with:
+#'   \describe{
+#'     \item{value}{Total value of the selected items.}
+#'     \item{elements}{Integer vector of row indices (in the original \code{x})
+#'       of the selected items, or \code{integer(0)} if none were selected.}
+#'   }
+#'
+#' @references
+#' https://en.wikipedia.org/wiki/Knapsack_problem#Greedy_approximation_algorithm
+#' @examples
+#' data(knapsack_objects)
+#' greedy_knapsack(x = knapsack_objects[1:8, ], W = 3500)
+#'
+#' @export
 greedy_knapsack <- function(x, W) {
   # Validates the inputs
   stopifnot(
