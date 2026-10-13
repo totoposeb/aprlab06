@@ -33,17 +33,17 @@
 #'   \code{list(value = 0, elements = integer(0))}.
 #'
 #' @examples
-#'  Load the knapsack_objects data set (assumed to be available in the package)
+#' # Load the knapsack_objects data set (assumed to be available in the package)
 #' data(knapsack_objects)
 #'
-#'  Solve the knapsack problem for the first 8 objects with capacity 3500
+#' # Solve the knapsack problem for the first 8 objects with capacity 3500
 #' brute_force_knapsack(x = knapsack_objects[1:8, ], W = 3500)
 #'
-#'  Expected output:
-#'  $value
-#'  [1] 16770
-#'  $elements
-#'  [1] 5 8
+#' # Expected output:
+#' # $value
+#' # [1] 16770
+#' # $elements
+#' # [1] 5 8
 #'
 #' @export
 brute_force_knapsack <- function(x, W, parallel = FALSE) {
