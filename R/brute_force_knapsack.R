@@ -1,50 +1,16 @@
 #' Brute Force Knapsack Solver
 #'
-#' Solves the 0/1 knapsack problem by exhaustively enumerating all possible
-#' subsets of items. The function iterates over every combination from 1 to
-#' \code{2^n - 1}, checks whether the total weight of each combination is
-#' within the capacity limit \code{W}, and keeps track of the combination
-#' with the highest total value.
+#' Solves the knapsack problem by trying every combination of items.
 #'
-#' @param x A \code{data.frame} that must contain the following two columns:
-#'   \describe{
-#'     \item{v}{A numeric vector of item values. All values must be positive.}
-#'     \item{w}{A numeric vector of item weights. All weights must be positive.}
-#'   }
-#'   In addition, \code{x} must not have more than 31 rows, since the number
-#'   of combinations grows exponentially with the number of items.
-#'
-#' @param W A single positive number giving the maximum weight capacity of the
-#'   knapsack.
-#'
-#' @param parallel A logical value indicating whether the computation should
-#'   be performed in parallel. Defaults to \code{FALSE}. When \code{TRUE}, the
-#'   search space is split into pieces across multiple cores using
-#'   \code{parallel::parLapply}.
-#'
-#' @return A list with the following two elements:
-#'   \describe{
-#'     \item{value}{A numeric scalar giving the maximum total value found.}
-#'     \item{elements}{An integer vector giving the row indices of the items
-#'       that make up the optimal solution. If no items are selected, this is
-#'       an integer vector of length 0.}
-#'   }
-#'   For an empty input (\code{nrow(x) == 0}), the function returns
-#'   \code{list(value = 0, elements = integer(0))}.
-#'
+#' @param x A data.frame with columns `v` (values) and `w` (weights), with
+#'   positive numbers only and at most 31 rows.
+#' @param W A positive number, the knapsack capacity.
+#' @param parallel If `TRUE`, the search is split over the detected cores.
+#' @return A list with the best `value` found and the `elements` (rows of
+#'   `x`) that give it.
+#' @references <https://en.wikipedia.org/wiki/Knapsack_problem>
 #' @examples
-#'  Load the knapsack_objects data set (assumed to be available in the package)
-#' data(knapsack_objects)
-#'
-#'  Solve the knapsack problem for the first 8 objects with capacity 3500
 #' brute_force_knapsack(x = knapsack_objects[1:8, ], W = 3500)
-#'
-#'  Expected output:
-#'  $value
-#'  [1] 16770
-#'  $elements
-#'  [1] 5 8
-#'
 #' @export
 brute_force_knapsack <- function(x, W, parallel = FALSE) {
   # Validates the inputs
