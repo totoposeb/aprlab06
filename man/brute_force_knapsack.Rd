@@ -7,6 +7,7 @@
 brute_force_knapsack(x, W, parallel = FALSE)
 }
 \arguments{
+<<<<<<< HEAD
 \item{x}{A \code{data.frame} that must contain the following two columns:
 \describe{
 \item{v}{A numeric vector of item values. All values must be positive.}
@@ -54,4 +55,25 @@ brute_force_knapsack(x = knapsack_objects[1:8, ], W = 3500)
 # $elements
 # [1] 5 8
 
+=======
+\item{x}{A data.frame with columns \code{v} (values) and \code{w} (weights), with
+positive numbers only and at most 31 rows.}
+
+\item{W}{A positive number, the knapsack capacity.}
+
+\item{parallel}{If \code{TRUE}, the search is split over the detected cores.}
+}
+\value{
+A list with the best \code{value} found and the \code{elements} (rows of
+\code{x}) that give it.
+}
+\description{
+Solves the knapsack problem by trying every combination of items.
+}
+\examples{
+brute_force_knapsack(x = knapsack_objects[1:8, ], W = 3500)
+}
+\references{
+\url{https://en.wikipedia.org/wiki/Knapsack_problem}
+>>>>>>> 4e085b168de1ad87e800831bf809663d2733145f
 }

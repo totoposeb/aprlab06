@@ -7,6 +7,7 @@
 knapsack_dynamic(x, W)
 }
 \arguments{
+<<<<<<< HEAD
 \item{x}{A \code{data.frame} with columns \code{v} (values) and \code{w}
 (weights), both numeric and positive. All weights must be integers.}
 
@@ -35,4 +36,23 @@ knapsack_dynamic(x = knapsack_objects[1:8, ], W = 3500)
 }
 \references{
 https://en.wikipedia.org/wiki/Knapsack_problem#Dynamic_programming_in-advance_algorithm
+=======
+\item{x}{A data.frame with columns \code{v} (values) and \code{w} (weights), with
+positive numbers only. The weights must be whole numbers.}
+
+\item{W}{A positive whole number, the knapsack capacity.}
+}
+\value{
+A list with the best \code{value} found and the \code{elements} (rows of
+\code{x}) that give it.
+}
+\description{
+Solves the knapsack problem exactly with dynamic programming.
+}
+\examples{
+knapsack_dynamic(x = knapsack_objects[1:8, ], W = 3500)
+}
+\references{
+\url{https://en.wikipedia.org/wiki/Knapsack_problem#Dynamic_programming_in-advance_algorithm}
+>>>>>>> 4e085b168de1ad87e800831bf809663d2733145f
 }

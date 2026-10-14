@@ -7,6 +7,7 @@
 greedy_knapsack(x, W)
 }
 \arguments{
+<<<<<<< HEAD
 \item{x}{A \code{data.frame} with columns \code{v} (values) and \code{w}
 (weights), both numeric and positive.}
 
@@ -33,4 +34,25 @@ greedy_knapsack(x = knapsack_objects[1:8, ], W = 3500)
 }
 \references{
 https://en.wikipedia.org/wiki/Knapsack_problem#Greedy_approximation_algorithm
+=======
+\item{x}{A data.frame with columns \code{v} (values) and \code{w} (weights), with
+positive numbers only.}
+
+\item{W}{A positive number, the knapsack capacity.}
+}
+\value{
+A list with the \code{value} found and the \code{elements} (rows of \code{x}),
+in the order they were taken.
+}
+\description{
+Solves the knapsack problem with a greedy heuristic: items are taken by
+value per weight, largest first, until the next one does not fit. The
+result is not always the best one.
+}
+\examples{
+greedy_knapsack(x = knapsack_objects[1:8, ], W = 3500)
+}
+\references{
+\url{https://en.wikipedia.org/wiki/Knapsack_problem#Greedy_approximation_algorithm}
+>>>>>>> 4e085b168de1ad87e800831bf809663d2733145f
 }
