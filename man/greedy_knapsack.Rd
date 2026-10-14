@@ -7,34 +7,6 @@
 greedy_knapsack(x, W)
 }
 \arguments{
-<<<<<<< HEAD
-\item{x}{A \code{data.frame} with columns \code{v} (values) and \code{w}
-(weights), both numeric and positive.}
-
-\item{W}{A single positive number giving the maximum weight capacity.}
-}
-\value{
-A list with:
-\describe{
-\item{value}{Total value of the selected items.}
-\item{elements}{Integer vector of row indices (in the original \code{x})
-of the selected items, or \code{integer(0)} if none were selected.}
-}
-}
-\description{
-Solves the 0/1 knapsack problem using a greedy heuristic. Items are ranked
-by value density (\code{v / w}) in descending order, and added one by one
-until the next item would exceed the capacity \code{W}. This heuristic does
-not guarantee an optimal solution.
-}
-\examples{
-data(knapsack_objects)
-greedy_knapsack(x = knapsack_objects[1:8, ], W = 3500)
-
-}
-\references{
-https://en.wikipedia.org/wiki/Knapsack_problem#Greedy_approximation_algorithm
-=======
 \item{x}{A data.frame with columns \code{v} (values) and \code{w} (weights), with
 positive numbers only.}
 
@@ -54,5 +26,4 @@ greedy_knapsack(x = knapsack_objects[1:8, ], W = 3500)
 }
 \references{
 \url{https://en.wikipedia.org/wiki/Knapsack_problem#Greedy_approximation_algorithm}
->>>>>>> 4e085b168de1ad87e800831bf809663d2733145f
 }

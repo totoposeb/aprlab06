@@ -7,36 +7,6 @@
 knapsack_dynamic(x, W)
 }
 \arguments{
-<<<<<<< HEAD
-\item{x}{A \code{data.frame} with columns \code{v} (values) and \code{w}
-(weights), both numeric and positive. All weights must be integers.}
-
-\item{W}{A single positive number giving the maximum weight capacity.
-Must be an integer.}
-}
-\value{
-A list with:
-\describe{
-\item{value}{Maximum total value found.}
-\item{elements}{Integer vector of row indices of the selected items,
-or \code{integer(0)} if none were selected.}
-}
-}
-\description{
-Solves the 0/1 knapsack problem exactly using dynamic programming. A matrix
-of size \code{(n + 1) x (W + 1)} is filled, where each cell holds the best
-value achievable with the first \code{i} items and capacity \code{j}. The
-optimal set of items is then recovered by backtracking through the matrix.
-Requires \code{W} and all weights in \code{x$w} to be integers.
-}
-\examples{
-data(knapsack_objects)
-knapsack_dynamic(x = knapsack_objects[1:8, ], W = 3500)
-
-}
-\references{
-https://en.wikipedia.org/wiki/Knapsack_problem#Dynamic_programming_in-advance_algorithm
-=======
 \item{x}{A data.frame with columns \code{v} (values) and \code{w} (weights), with
 positive numbers only. The weights must be whole numbers.}
 
@@ -54,5 +24,4 @@ knapsack_dynamic(x = knapsack_objects[1:8, ], W = 3500)
 }
 \references{
 \url{https://en.wikipedia.org/wiki/Knapsack_problem#Dynamic_programming_in-advance_algorithm}
->>>>>>> 4e085b168de1ad87e800831bf809663d2733145f
 }

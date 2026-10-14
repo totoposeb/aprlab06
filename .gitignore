@@ -18,3 +18,4 @@ renv/python/
 .DS_Store
 .vscode/
 .Rproj.user
+inst/doc

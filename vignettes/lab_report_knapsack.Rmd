@@ -1,0 +1,160 @@
+---
+title: "Lab report: knapsack"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Lab report: knapsack}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(aprlab06)
+```
+
+## Introduction
+
+<!-- TODO: The knapsack problem in one or two sentences: a knapsack that
+holds at most a weight W, objects with a weight and a value, and the goal of
+the largest total value that fits. Then the three functions of the package.
+Say that this vignette is the lab report. -->
+
+## The data
+
+<!-- TODO: Say that knapsack_objects ships with the package: 2000 objects,
+each with a weight w and a value v. It was created with the code from the lab
+instructions, shown below. -->
+
+```{r, eval = FALSE}
+# TODO: the lab's code that creates knapsack_objects
+# (eval = FALSE: it is shown but not run, the data is already in the package)
+```
+
+```{r}
+# TODO: take a quick look at the data with head()
+```
+
+## Brute force search: `brute_force_knapsack()`
+
+<!-- TODO: What the function does: it tries every combination of objects and
+keeps the best one that fits. It always gives the right answer, and there are
+2^n combinations to try. -->
+
+```{r}
+# TODO: the lab's examples, first 8 and first 12 objects with W = 3500
+```
+
+```{r}
+# TODO: the lab's examples, first 8 and first 12 objects with W = 2000
+```
+
+> **Question:** How much time does it take to run the algorithm for n = 16
+> objects?
+
+```{r}
+# TODO: system.time() for the first 16 objects with W = 2000
+```
+
+<!-- TODO: Answer in one or two sentences: the elapsed time, the W used and
+the computer it ran on. Say why the time doubles with each extra object. -->
+
+## Dynamic programming: `knapsack_dynamic()`
+
+<!-- TODO: What the function does: it fills a table with the best value for
+the first i objects and a knapsack of size j. It needs whole-number weights.
+It gives the same answers as brute force, in O(Wn). -->
+
+```{r}
+# TODO: the same examples as brute force, to show the results are equal
+```
+
+> **Question:** How much time does it take to run the algorithm for n = 500
+> objects?
+
+```{r}
+# TODO: system.time() for the first 500 objects with W = 3500
+```
+
+<!-- TODO: Answer: the elapsed time, the W used and the computer. -->
+
+## Greedy heuristic: `greedy_knapsack()`
+
+<!-- TODO: What the function does: it takes the objects with the most value
+per weight first, and stops at the first one that does not fit. It is fast,
+O(n log n) because of the sorting, but not always the best answer. -->
+
+```{r}
+# TODO: the lab's examples, first 800 objects with W = 3500 and first 1200
+# objects with W = 2000
+```
+
+<!-- TODO (optional): Show one case where it is not the best answer: the
+first 8 objects with W = 3500, next to the brute force result. -->
+
+> **Question:** How much time does it take to run the algorithm for
+> n = 1000000 objects?
+
+```{r}
+# TODO: create the million objects with the lab's code and n <- 1000000
+# (this chunk has to run, the million objects are not in the package)
+```
+
+```{r}
+# TODO: system.time() for the million objects with W = 3500
+```
+
+<!-- TODO: Answer: the elapsed time, the W used and the computer. -->
+
+## Profiling and optimization
+
+<!-- TODO: What profvis showed for brute_force_knapsack(): which line took
+most of the time and why. Then what we changed. -->
+
+> **Question:** What performance gain could you get by trying to improving
+> your code?
+
+<!-- TODO: Answer with the times before and after. The old version is no
+longer in the package, so the numbers are typed by hand. Name the computer. -->
+
+| Function                 | Input                  | Before | After | Gain |
+|--------------------------|------------------------|--------|-------|------|
+| `brute_force_knapsack()` | 16 objects, `W = 2000` | TODO   | TODO  | TODO |
+
+<!-- TODO (optional): One sentence each on what profvis showed for the other
+two functions. -->
+
+## Parallel brute force search
+
+<!-- TODO: Say that this is the starred exercise we chose (section 1.1.8).
+How parallel = TRUE works: the combinations are cut into one piece per core,
+each worker searches its piece, and the best result is kept. -->
+
+```{r, eval = FALSE}
+# TODO: the same call with and without parallel = TRUE, inside system.time()
+# (eval = FALSE: inside the package check only two workers are allowed, so
+# the numbers below were measured on our own computer)
+```
+
+> **Question:** What performance gain could you get by parallelizing brute
+> force search?
+
+<!-- TODO: Answer with the times with and without parallel, typed by hand,
+and the number of cores. Explain why the gain is smaller than the number of
+cores, and why it is slower for few objects. -->
+
+| Objects | Without `parallel` | With `parallel` | Gain |
+|---------|--------------------|-----------------|------|
+| TODO    | TODO               | TODO            | TODO |
+
+## Summary
+
+<!-- TODO (optional): One table with the three functions: whether the answer
+is always the best, how the time grows, and the time measured above. The
+seminar asks us to present the speed of the algorithms. -->
+
