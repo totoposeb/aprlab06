@@ -20,141 +20,177 @@ library(aprlab06)
 
 ## Introduction
 
-<!-- TODO: The knapsack problem in one or two sentences: a knapsack that
-holds at most a weight W, objects with a weight and a value, and the goal of
-the largest total value that fits. Then the three functions of the package.
-Say that this vignette is the lab report. -->
+This is the Lab 06 report for the `aprlab06` package. The package contains three different functions, each with a different algorithm that solves the knapsack problem. From the Lab 06 instructions:
+
+> The knapsack problem is a discrete optimization problem where we have a knapsack that can take a limited weight $W$ and we want to fill this knapsack with a number of items $i = 1, ..., n$, each with a weight $w_i$ and a value $v_i$. The goal is to find the knapsack with the largest value of the elements added to the knapsack. This problem is NP-hard, meaning that it is "at least as hard as the hardest problem in NP" (en.wikipedia.org/wiki/NP-hardness).
+
+The package contains the following functions:
+
+- `brute_force_knapsack()`: Tries every possible combination of items to find the one that fits and has maximum value.
+- `knapsack_dynamic()`: Uses dynamic programming to optimize the maximum value search for each possible weight limit.
+- `greedy_knapsack()`: A heuristic that orders the items by value density and selects the most densely valuable first.
+
+All the results in this report were run on the same computer: a MacBook Pro with an Apple M5 Pro chip, an 18 core CPU (6 Super and 12 Performance cores) and 64 GB of memory.
 
 ## The data
 
-<!-- TODO: Say that knapsack_objects ships with the package: 2000 objects,
-each with a weight w and a value v. It was created with the code from the lab
-instructions, shown below. -->
+The package includes a `data.frame` `knapsack_objects` containing 2000 objects, with columns `w` and `v` indicating each object's weight and value respectively. It was created using the lab's instructions with the following code:
 
 ```{r, eval = FALSE}
-# TODO: the lab's code that creates knapsack_objects
-# (eval = FALSE: it is shown but not run, the data is already in the package)
+suppressWarnings(RNGversion(min(as.character(getRversion()),"3.5.3")))
+set.seed(42, kind = "Mersenne-Twister", normal.kind = "Inversion")
+n <- 2000
+knapsack_objects <- data.frame(
+  w = sample(1:4000, size = n, replace = TRUE),
+  v = runif(n = n, 0, 10000)
+)
+```
+
+Here is a look at the first lines of `knapsack_objects`:
+
+```{r}
+head(knapsack_objects)
+```
+
+## Brute force search: `brute_force_knapsack(x, W, parallel)`
+
+This algorithm solves the knapsack problem by trying every combination of items ($2^n$), and thus always returning the right answer. It takes the following arguments:
+
+- `x`: A `data.frame` with columns `v` (values) and `w` (weights), with positive numbers only and at most 31 rows.
+- `W`: A positive number, the knapsack capacity.
+- `parallel`: If `TRUE`, the search is split over the detected cores.
+
+The algorithm calculates the total number of possible combinations and goes through each one of them, storing the best possible value with items that do not exceed the maximum weight $W$ through each iteration. The `parallel` argument allows the computations to be parallelized when multiple cores are available, reducing the execution time.
+
+```{r}
+brute_force_knapsack(x = knapsack_objects[1:16,], W = 2000)
+```
+
+> **Question:** How much time does it take to run the algorithm for $n = 16$ objects?
+
+```{r}
+system.time(brute_force_knapsack(x = knapsack_objects[1:16,], W = 2000))
+```
+
+The elapsed time was 0.078 s with 16 objects and `W = 2000`. Time doubles with each additional object as combinations to try double as well.
+
+## Dynamic programming: `knapsack_dynamic(x, W)`
+
+This algorithm solves the knapsack problem by filling a table with the best value for each number of items and each knapsack capacity, and thus also always returning the right answer, as long as the weights are whole numbers. It takes the following arguments:
+
+- `x`: A `data.frame` with columns `v` (values) and `w` (weights), with positive numbers only. The weights must be whole numbers.
+- `W`: A positive whole number, the knapsack capacity.
+
+The algorithm builds a matrix with one row for each number of items, from $0$ to $n$, and one column for each capacity, from $0$ to $W$. Each cell stores the best value that the first items can reach with that capacity, using the row above it, and the best value of all ends up in the last cell. The items are then found by walking back up the table. With the same 16 objects and `W = 2000`, it returns the same result as the brute force search.
+
+```{r}
+knapsack_dynamic(x = knapsack_objects[1:16,], W = 2000)
+```
+
+> **Question:** How much time does it take to run the algorithm for $n = 500$ objects?
+
+```{r}
+system.time(knapsack_dynamic(x = knapsack_objects[1:500,], W = 3500))
+```
+
+The elapsed time was 0.272 s with 500 objects and `W = 3500`. Time grows in proportion to the number of objects times $W$, as the table has one cell for each pair.
+
+## Greedy heuristic: `greedy_knapsack(x, W)`
+
+This algorithm solves the knapsack problem by taking the items with the highest value per unit of weight first, and thus does not always return the right answer, but a close one in much less time. It takes the following arguments:
+
+- `x`: A `data.frame` with columns `v` (values) and `w` (weights), with positive numbers only.
+- `W`: A positive number, the knapsack capacity.
+
+The algorithm calculates the value density ($v_i / w_i$) of each item, orders the items from the most to the least densely valuable, and adds them in that order until the next one would exceed the maximum weight $W$. Sorting the items is the most expensive step. R's `order()` sorts numbers with a radix sort, so the whole function runs in $\Theta(n)$.
+
+```{r}
+greedy_knapsack(x = knapsack_objects[1:800,], W = 3500)
+greedy_knapsack(x = knapsack_objects[1:1200,], W = 2000)
+```
+
+With the first 8 objects and `W = 3500`, it returns a value of 15427.81, while the brute force search finds 16770.38:
+
+```{r}
+greedy_knapsack(x = knapsack_objects[1:8,], W = 3500)
+brute_force_knapsack(x = knapsack_objects[1:8,], W = 3500)
+```
+
+> **Question:** How much time does it take to run the algorithm for $n = 1000000$ objects?
+
+The million objects are created with the same code as `knapsack_objects`, with `n` set to `1000000`:
+
+```{r}
+suppressWarnings(RNGversion(min(as.character(getRversion()),"3.5.3")))
+set.seed(42, kind = "Mersenne-Twister", normal.kind = "Inversion")
+n <- 1000000
+million_objects <- data.frame(
+  w = sample(1:4000, size = n, replace = TRUE),
+  v = runif(n = n, 0, 10000)
+)
 ```
 
 ```{r}
-# TODO: take a quick look at the data with head()
+system.time(greedy_knapsack(x = million_objects, W = 3500))
 ```
 
-## Brute force search: `brute_force_knapsack()`
-
-<!-- TODO: What the function does: it tries every combination of objects and
-keeps the best one that fits. It always gives the right answer, and there are
-2^n combinations to try. -->
-
-```{r}
-# TODO: the lab's examples, first 8 and first 12 objects with W = 3500
-```
-
-```{r}
-# TODO: the lab's examples, first 8 and first 12 objects with W = 2000
-```
-
-> **Question:** How much time does it take to run the algorithm for n = 16
-> objects?
-
-```{r}
-# TODO: system.time() for the first 16 objects with W = 2000
-```
-
-<!-- TODO: Answer in one or two sentences: the elapsed time, the W used and
-the computer it ran on. Say why the time doubles with each extra object. -->
-
-## Dynamic programming: `knapsack_dynamic()`
-
-<!-- TODO: What the function does: it fills a table with the best value for
-the first i objects and a knapsack of size j. It needs whole-number weights.
-It gives the same answers as brute force, in O(Wn). -->
-
-```{r}
-# TODO: the same examples as brute force, to show the results are equal
-```
-
-> **Question:** How much time does it take to run the algorithm for n = 500
-> objects?
-
-```{r}
-# TODO: system.time() for the first 500 objects with W = 3500
-```
-
-<!-- TODO: Answer: the elapsed time, the W used and the computer. -->
-
-## Greedy heuristic: `greedy_knapsack()`
-
-<!-- TODO: What the function does: it takes the objects with the most value
-per weight first, and stops at the first one that does not fit. It is fast,
-O(n log n) because of the sorting, but not always the best answer. -->
-
-```{r}
-# TODO: the lab's examples, first 800 objects with W = 3500 and first 1200
-# objects with W = 2000
-```
-
-<!-- TODO (optional): Show one case where it is not the best answer: the
-first 8 objects with W = 3500, next to the brute force result. -->
-
-> **Question:** How much time does it take to run the algorithm for
-> n = 1000000 objects?
-
-```{r}
-# TODO: create the million objects with the lab's code and n <- 1000000
-# (this chunk has to run, the million objects are not in the package)
-```
-
-```{r}
-# TODO: system.time() for the million objects with W = 3500
-```
-
-<!-- TODO: Answer: the elapsed time, the W used and the computer. -->
+The elapsed time was 0.061 s with 1000000 objects and `W = 3500`. Most of the time goes into sorting the items, and it grows in proportion to the number of objects.
 
 ## Profiling and optimization
 
-<!-- TODO: What profvis showed for brute_force_knapsack(): which line took
-most of the time and why. Then what we changed. -->
+The three functions were profiled with `profvis` to find which lines take the most time. For `brute_force_knapsack()` with 16 objects and `W = 2000`, 71% of the time was spent on the line that checks the weight of each combination, and more than half of the time was spent inside `[.data.frame`, reading the `data.frame`:
 
-> **Question:** What performance gain could you get by trying to improving
-> your code?
+```r
+if (sum(x[selected_rows, "w"]) <= W) {
+```
 
-<!-- TODO: Answer with the times before and after. The old version is no
-longer in the package, so the numbers are typed by hand. Name the computer. -->
+Reading a `data.frame` is much slower than reading a vector, and this line did it once for every combination. To fix it, the columns `w` and `v` are now copied into two vectors before the loop, and the loop reads those instead. After the change, `profvis` showed most of the remaining time in `which()`, which finds the items of each combination.
 
-| Function                 | Input                  | Before | After | Gain |
-|--------------------------|------------------------|--------|-------|------|
-| `brute_force_knapsack()` | 16 objects, `W = 2000` | TODO   | TODO  | TODO |
+> **Question:** What performance gain could you get by trying to improving your code?
 
-<!-- TODO (optional): One sentence each on what profvis showed for the other
-two functions. -->
+The new version returns exactly the same results and is about 4.5 times faster. Both versions were run one after the other, with the same input:
+
+| Function                 | Input                  | Before | After  | Gain      |
+|--------------------------|------------------------|--------|--------|-----------|
+| `brute_force_knapsack()` | 16 objects, `W = 2000` | 0.36 s | 0.08 s | 4.5 times |
+| `brute_force_knapsack()` | 20 objects, `W = 2000` | 5.74 s | 1.27 s | 4.5 times |
+
+For `knapsack_dynamic()`, `profvis` showed the time spread over the three lines inside the loop over the capacities, as each cell of the table is filled one at a time. For `greedy_knapsack()`, most of the time went into sorting the items. Neither of them was changed.
 
 ## Parallel brute force search
 
-<!-- TODO: Say that this is the starred exercise we chose (section 1.1.8).
-How parallel = TRUE works: the combinations are cut into one piece per core,
-each worker searches its piece, and the best result is kept. -->
+For the starred exercise we chose to parallelize the brute force search (section 1.1.8 of the lab instructions). With `parallel = TRUE`, the combinations are cut into one piece per core, each worker searches its own piece at the same time, and the best result of all the pieces is kept. The workers are started with `parallel::makeCluster()` and receive their pieces through `parallel::parLapply()`, which works on macOS, Linux and Windows alike.
 
-```{r, eval = FALSE}
-# TODO: the same call with and without parallel = TRUE, inside system.time()
-# (eval = FALSE: inside the package check only two workers are allowed, so
-# the numbers below were measured on our own computer)
+```{r}
+system.time(brute_force_knapsack(x = knapsack_objects[1:22,], W = 2000))
 ```
 
-> **Question:** What performance gain could you get by parallelizing brute
-> force search?
+```{r}
+system.time(brute_force_knapsack(x = knapsack_objects[1:22,], W = 2000, parallel = TRUE))
+```
 
-<!-- TODO: Answer with the times with and without parallel, typed by hand,
-and the number of cores. Explain why the gain is smaller than the number of
-cores, and why it is slower for few objects. -->
+> **Question:** What performance gain could you get by parallelizing brute force search?
 
-| Objects | Without `parallel` | With `parallel` | Gain |
-|---------|--------------------|-----------------|------|
-| TODO    | TODO               | TODO            | TODO |
+When this vignette is built during the package check, only two workers are allowed. The times in the table below were measured separately, with all the 18 cores that `parallel::detectCores()` finds:
+
+| Objects | Without `parallel` | With `parallel` | Gain               |
+|---------|--------------------|-----------------|--------------------|
+| 16      | 0.08 s             | 0.38 s          | 0.2 times (slower) |
+| 20      | 1.31 s             | 0.27 s          | 4.9 times          |
+| 22      | 5.11 s             | 1.11 s          | 4.6 times          |
+
+The gain is much smaller than the number of cores, and with 16 objects the parallel search is even slower. Starting and stopping the workers takes about 0.3 s, which is more than the whole search with 16 objects. Part of the work cannot be split, like starting the workers and comparing their results (Amdahl's law), and the search only ends when the slowest worker is done. The more objects there are, the more the parallel search pays off.
 
 ## Summary
 
-<!-- TODO (optional): One table with the three functions: whether the answer
-is always the best, how the time grows, and the time measured above. The
-seminar asks us to present the speed of the algorithms. -->
+The three functions side by side, with the times measured above:
 
+| Function                 | Always the right answer        | Complexity               | Time measured               |
+|--------------------------|--------------------------------|--------------------------|-----------------------------|
+| `brute_force_knapsack()` | Yes                            | $\Theta(n \cdot 2^n)$    | 0.078 s for 16 objects      |
+| `knapsack_dynamic()`     | Yes, with whole-number weights | $\Theta(n \cdot W)$      | 0.272 s for 500 objects     |
+| `greedy_knapsack()`      | No                             | $\Theta(n)$              | 0.061 s for 1000000 objects |
+
+The brute force search tries $2^n$ combinations, and adding up the weights of one combination takes up to $n$ steps. The greedy heuristic is $\Theta(n)$ and not $\Theta(n \log n)$ because R's `order()` sorts numbers with a radix sort, which takes time proportional to $n$. With a sort that compares the items, it would be $\Theta(n \log n)$.
+
+The brute force search is only usable for a few dozen objects at most, dynamic programming handles hundreds or thousands of objects as long as $W$ is not too large, and the greedy heuristic handles millions, at the cost of not always finding the best answer.
